@@ -6,7 +6,7 @@ Chromium을 내장한 Electron 기반 Windows 브라우저입니다. 세로 탭,
 
 **[Windows 설치 파일 다운로드](https://github.com/se01hxa/Orbit/releases/download/v0.3.0-beta.7/Orbit-Setup-0.3.0-beta.7-x64.exe)** · [릴리스와 SHA-256 확인](https://github.com/se01hxa/Orbit/releases/tag/v0.3.0-beta.7)
 
-GitHub에 로그인한 뒤 다운로드하세요. 비공개 저장소이므로 저장소 접근 권한이 필요합니다.
+공개 저장소이므로 GitHub 로그인 없이 설치 파일을 다운로드할 수 있습니다.
 
 일반 사용자는 `Orbit-Setup-0.3.0-beta.7-x64.exe`를 실행해 설치합니다. Node.js나 관리자 권한은 필요하지 않습니다. 설치 위치를 선택한 뒤 시작 메뉴에서 Orbit을 실행하세요. 기존 Orbit을 닫고 새 설치 파일을 실행하면 기본 프로필의 탭·스페이스·로그인 데이터·색상 설정을 이어서 사용합니다.
 
