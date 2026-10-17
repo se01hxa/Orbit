@@ -1,0 +1,33 @@
+{
+  "name": "orbit-browser",
+  "productName": "Orbit",
+  "version": "0.3.0-beta.7",
+  "description": "A Chromium-powered browser with spaces, vertical tabs and automatic picture in picture.",
+  "main": "main.cjs",
+  "private": true,
+  "author": "Orbit Browser",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "node scripts/start.cjs",
+    "test": "node --test tests/model.test.cjs tests/bookmarks.test.cjs tests/extension-path.test.cjs tests/discord-rpc.test.cjs tests/passwords.test.cjs tests/orbit-spaces.test.cjs tests/history.test.cjs tests/internal-pages.test.cjs",
+    "test:features": "node tests/features.cjs",
+    "test:smoke": "node tests/smoke.cjs",
+    "test:motion": "node tests/motion.cjs",
+    "test:release": "node tests/release.cjs",
+    "test:installer": "node tests/installer.cjs",
+    "check": "node scripts/check.cjs",
+    "dist": "node scripts/dist.cjs",
+    "package": "node scripts/package.cjs",
+    "test:rpc": "node tests/rpc.cjs",
+    "test:passwords": "node tests/passwords.cjs",
+    "test:oauth": "node tests/oauth-spaces.cjs",
+    "test:history": "node tests/history.cjs",
+    "test:internal": "node tests/internal-pages.cjs"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron": "44.8.0",
+    "electron-builder": "26.15.3",
+    "playwright": "1.64.1"
+  }
+}

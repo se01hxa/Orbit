@@ -1,0 +1,23 @@
+node_modules/
+*.log
+
+# Local credentials, signing keys and browser profiles
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.pem
+*.key
+orbit-passwords.bin*
+profile/
+profiles/
+userData/
+work/
+# Generated dependencies and release binaries
+Orbit-release/
+dist/
+out/
+*.exe
+*.zip
+*.asar

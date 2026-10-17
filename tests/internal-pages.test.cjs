@@ -1,0 +1,4 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const {normalizeInput,createDefaultState,sanitizeState}=require('../lib/model.cjs');
+test('Chrome and Arc aliases canonicalize to Orbit without web requests',()=>{for(const scheme of ['chrome','arc','Orbit']){assert.equal(normalizeInput(scheme+'://password-manager/passwords/'),'orbit://password-manager/passwords/');assert.equal(normalizeInput(scheme+'://settings'),'orbit://settings');}assert.equal(normalizeInput('chrome://chrome-urls'),'orbit://urls');assert.equal(normalizeInput('orbit://newtab/'),'orbit://newtab');});
+test('internal URLs survive profile restoration and unsafe forms fail',()=>{const s=createDefaultState();s.tabs[0].url='orbit://history';assert.equal(sanitizeState(s).tabs[0].url,'orbit://history');for(const url of ['orbit://user:pass@settings','orbit://settings?q=secret','arc://settings/#secret','orbit://settings:42'])assert.throws(()=>normalizeInput(url));});

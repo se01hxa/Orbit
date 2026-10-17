@@ -1,0 +1,104 @@
+name: Windows beta release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Match the tag to the package version
+        run: |
+          $orbitVersion = node -p "require('./package.json').version"
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$orbitVersion") {
+            throw "The release tag must equal v$orbitVersion."
+          }
+          "ORBIT_VERSION=$orbitVersion" >> $env:GITHUB_ENV
+
+      - name: Run unit and static checks
+        run: |
+          npm test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm run check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/dist.cjs --check
+
+      - name: Build the installer without publishing
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: npm run dist
+
+      - name: Inspect the publisher signature
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+        run: |
+          $orbitInstaller = Get-Item -LiteralPath "../Orbit-release/Orbit-Setup-$env:ORBIT_VERSION-x64.exe"
+          $orbitSignature = Get-AuthenticodeSignature -LiteralPath $orbitInstaller.FullName
+          if ($env:CSC_LINK -and $orbitSignature.Status -ne 'Valid') {
+            throw "A signing certificate was supplied, but the installer signature is not valid."
+          }
+          "SIGNATURE_STATUS=$($orbitSignature.Status)" >> $env:GITHUB_ENV
+          "Installer signature: $($orbitSignature.Status)" >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Save the installer and checksum
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: Orbit-Windows-${{ env.ORBIT_VERSION }}-x64
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            ../Orbit-release/Orbit-Setup-*-x64.exe
+            ../Orbit-release/SHA256SUMS.txt
+
+      - name: Prepare a draft release for a version tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $orbitTag = $env:GITHUB_REF_NAME
+          $orbitAssets = @("../Orbit-release/Orbit-Setup-$env:ORBIT_VERSION-x64.exe", '../Orbit-release/SHA256SUMS.txt')
+          $orbitNotes = Join-Path $env:RUNNER_TEMP 'orbit-release-notes.md'
+          @"
+          Windows x64 beta installer. Installation is per user and keeps browser data on uninstall.
+
+          Authenticode status: $env:SIGNATURE_STATUS. Unsigned beta builds can show a Windows SmartScreen warning.
+
+          Updates are manual. Review this draft and its installer before choosing to publish it.
+          "@ | Set-Content -LiteralPath $orbitNotes -Encoding utf8
+          $orbitExistingDraft = gh release view $orbitTag --json isDraft --jq '.isDraft' 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            if ($orbitExistingDraft -ne 'true') { throw 'The existing release is public; it will not be overwritten.' }
+            gh release upload $orbitTag @orbitAssets --clobber
+          } else {
+            gh release create $orbitTag @orbitAssets --draft --prerelease --verify-tag --title "Orbit $env:ORBIT_VERSION" --notes-file $orbitNotes
+          }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

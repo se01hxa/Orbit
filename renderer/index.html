@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; connect-src 'none'">
+  <title>Orbit</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="features.css">
+  <link rel="stylesheet" href="glass.css">
+  <link rel="stylesheet" href="icons.css">
+</head>
+<body>
+  <div id="app" class="app">
+    <aside class="sidebar" aria-label="탭과 스페이스">
+      <div class="brand-row drag"><button class="brand no-drag" id="homeButton" aria-label="Orbit 메뉴" aria-haspopup="dialog"><span class="orbit-mark"></span><span class="brand-name">orbit</span><span class="brand-menu-chevron" data-icon="chevronDown"></span></button><button class="icon-button collapse-button no-drag" id="collapseButton" title="사이드바 접기" aria-label="사이드바 접기" data-icon="sidebar"></button></div>
+      <button class="space-selector" id="spaceSelector" aria-haspopup="dialog"><span class="space-glyph" id="spaceGlyph">O</span><span class="space-label"><span id="spaceName">시작의 궤도</span><small>나만의 인터넷, 나만의 속도로</small></span><span class="space-chevron" data-icon="chevrons"></span></button>
+      <button class="new-tab-button" id="newTabButton"><span data-icon="plus"></span><span>새 탭</span><kbd>Ctrl T</kbd></button>
+      <div class="sidebar-scroll"><section class="favorites-section" id="favoritesSection" hidden><div class="section-label"><span>즐겨찾기</span><span data-icon="star"></span></div><div class="favorites-grid" id="favoritesGrid"></div></section><section class="pinned-section" id="pinnedSection"><div class="section-label"><span>고정 탭</span><span data-icon="pin"></span></div><div class="pinned-grid" id="pinnedTabs"></div></section><div class="folder-list" id="folderList"></div><section class="tabs-section"><div class="section-label"><span>열린 탭</span><span class="tab-count" id="tabCount">0</span></div><div id="tabList" class="tab-list"></div></section><div class="sidebar-hint" id="sidebarHint"><span data-icon="sparkles"></span><p>필요한 것에만 집중하세요.<br>나머지는 Orbit에 맡기고요.</p></div></div>
+      <div class="sidebar-bottom"><div class="space-dots" id="spaceDots" aria-label="스페이스 전환"></div><button class="icon-button add-space" id="addSpaceButton" aria-label="스페이스 추가" title="스페이스 추가" data-icon="plus"></button></div>
+      <div class="utility-row"><button class="utility-button" id="settingsButton" aria-label="설정" title="설정"><span data-icon="settings"></span><span>설정</span></button><button class="utility-button download-utility" id="downloadsButton" aria-label="다운로드" title="다운로드"><span class="download-icon" data-icon="download"></span><span>다운로드</span><span class="download-badge" id="downloadBadge" hidden></span></button></div>
+    </aside>
+    <main class="main-shell">
+      <header class="toolbar drag">
+        <div class="navigation no-drag"><button class="icon-button" id="backButton" aria-label="뒤로" title="뒤로 (Alt + ←)" data-icon="back"></button><button class="icon-button" id="forwardButton" aria-label="앞으로" title="앞으로 (Alt + →)" data-icon="forward"></button><button class="icon-button" id="reloadButton" aria-label="새로고침" title="새로고침 (Ctrl + R)" data-icon="reload"></button></div>
+        <button id="addressButton" class="address-button no-drag" aria-label="주소 또는 검색어 입력"><span id="addressIcon" data-icon="lock"></span><span id="addressText">새로운 가능성을 열어보세요</span><kbd>Ctrl L</kbd></button>
+        <div class="toolbar-actions no-drag"><button class="icon-button" id="passwordButton" aria-label="비밀번호 관리자" title="비밀번호 관리자" data-icon="key"></button><button class="icon-button" id="favoriteButton" aria-label="즐겨찾기에 추가" title="즐겨찾기에 추가 (Ctrl + D)" data-icon="star"></button><button class="icon-button" id="pipButton" aria-label="동영상 Picture-in-Picture" title="동영상 미니 플레이어" data-icon="pip"></button><button class="icon-button" id="splitButton" aria-label="분할 화면" title="분할 화면" data-icon="split"></button><button class="icon-button" id="moreButton" aria-label="Orbit 메뉴 열기" title="Orbit 메뉴" data-icon="more"></button></div>
+        <div class="window-controls no-drag"><button id="minimizeButton" aria-label="최소화" data-icon="minus"></button><button id="maximizeButton" aria-label="최대화" data-icon="maximize"></button><button id="closeButton" class="window-close" aria-label="창 닫기" data-icon="close"></button></div>
+      </header>
+      <div class="workspace-surface" id="workspaceSurface"></div>
+    </main>
+    <div class="toast" id="toast" role="status" hidden><span data-icon="check"></span><span id="toastText"></span><button class="icon-button" id="dismissToast" aria-label="알림 닫기" data-icon="close"></button></div>
+    <div class="overlay" id="overlay" hidden></div>
+    <div class="find-toolbar no-drag" id="findToolbar" hidden><span data-icon="search"></span><input id="findInput" aria-label="페이지에서 찾기" placeholder="페이지에서 찾기"><span class="find-count" id="findCount">0/0</span><button class="icon-button" id="findPrevious" aria-label="이전 검색 결과" data-icon="chevronUp"></button><button class="icon-button" id="findNext" aria-label="다음 검색 결과" data-icon="chevronDown"></button><button class="icon-button" id="findClose" aria-label="페이지 찾기 닫기" data-icon="close"></button></div>
+  </div>
+  <script src="icons.js"></script>
+  <script src="space-brand.js"></script>
+  <script src="features.js"></script>
+  <script src="internal-pages.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

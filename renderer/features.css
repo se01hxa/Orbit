@@ -1,0 +1,98 @@
+.brand-menu-chevron { display:flex;opacity:.48;margin:4px 0 0 2px }
+.brand-menu-chevron svg { width:12px;height:12px }
+.site-icon { display:block;width:20px;height:20px;object-fit:contain;image-rendering:auto }
+.tab-favicon { background:transparent }
+.tab-favicon .site-icon { width:18px;height:18px }
+.quick-link .site-icon { width:20px;height:20px }
+.collapsed .brand-menu-chevron { display:none }
+.favorites-section { margin-bottom:22px }
+.favorites-grid { position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:0 2px }
+.favorite-tile { height:43px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:#ffffff55;border:1px solid #ffffff55;transition:background .18s,transform .18s,box-shadow .18s }
+.favorite-tile:hover { background:#ffffff99;transform:translateY(-2px);box-shadow:0 4px 12px #344b4012 }
+.collapsed .favorites-grid { grid-template-columns:1fr }
+.collapsed .favorites-section { margin-bottom:12px }
+.collapsed .favorites-section .section-label { display:none }
+.tab-folder { margin:0 0 10px }
+.folder-heading { display:flex;align-items:center;gap:7px;width:100%;height:35px;border-radius:8px;padding:0 9px;text-align:left;opacity:.85 }
+.folder-heading:hover,.folder-heading.drop-target { background:#ffffff5c;opacity:1 }
+.folder-heading>svg { width:16px;height:16px }
+.folder-chevron { display:flex;opacity:.6 }
+.folder-chevron svg { width:12px;height:12px }
+.folder-name { flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px }
+.folder-count { font-size:10px;opacity:.5 }
+.folder-tabs { padding-left:11px;margin-left:11px;border-left:1px solid #4d685322;position:relative }
+.folder-tabs .tab-row { padding-left:7px }
+.collapsed .folder-heading { justify-content:center;padding:0 }
+.collapsed .folder-chevron,.collapsed .folder-name,.collapsed .folder-count { display:none }
+.collapsed .folder-tabs { margin:0;border:0;padding:0 }
+.tab-row.dragging { opacity:.35 }
+.tab-row.drop-target { box-shadow:0 -2px 0 #8280cd }
+.pinned-tab.dragging { opacity:.35 }
+.pinned-tab.drop-target { box-shadow:-2px 0 0 #8280cd }
+#favoriteButton[aria-pressed="true"] svg { fill:#a295db66;stroke:#7563b3 }
+.overlay:has(.app-menu) { align-items:flex-start;justify-content:flex-start;padding:58px 14px 15px;background:#18222120;backdrop-filter:blur(7px) }
+.app-menu { width:320px;max-height:calc(100vh - 76px);overflow:auto;padding:10px 6px;border-radius:16px;color:#f5f3fb;background:#292730f5;border:1px solid #ffffff1f;box-shadow:0 18px 60px #10111745;animation:dialogEnter .22s cubic-bezier(.22,1,.36,1);scrollbar-width:thin;scrollbar-color:#ffffff26 transparent }
+.app-menu-brand { display:flex;align-items:center;gap:9px;padding:7px 12px 14px }
+.app-menu-brand strong { flex:1;font-size:17px;font-weight:600;letter-spacing:-.6px }
+.app-menu-brand .orbit-mark { width:24px;height:24px }
+.version-pill { border:1px solid #ffffff24;border-radius:5px;font-size:8px;padding:4px 6px;letter-spacing:1px;color:#d0c9ea }
+.menu-row { display:flex;align-items:center;gap:12px;width:100%;height:39px;padding:0 12px;border-radius:8px;text-align:left;transition:background .14s,transform .14s }
+.menu-row:hover,.menu-row:focus-visible { background:#ffffff12 }
+.menu-row>svg { width:19px;height:19px;flex:0 0 auto;opacity:.92 }
+.menu-row-label { flex:1;font-size:12px }
+.menu-row kbd { opacity:.5;font-size:9px }
+.menu-divider { height:1px;margin:7px 8px;background:#ffffff13 }
+.menu-zoom { display:flex;align-items:center;padding:10px 12px 1px;margin-top:8px;border-top:1px solid #ffffff14;gap:5px }
+.menu-zoom>span { flex:1;font-size:11px;opacity:.6 }
+.menu-zoom .icon-button:hover { background:#ffffff16 }
+.zoom-reset { font-size:10px;min-width:46px;height:27px;border:1px solid #ffffff16;border-radius:6px }
+.feature-dialog { width:620px }
+.library-tools { display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px }
+.library-search { margin-bottom:14px }
+.library-list { display:flex;flex-direction:column;gap:5px;max-height:430px;overflow:auto;scrollbar-width:thin }
+.library-row { display:flex;align-items:center;gap:12px;min-height:57px;padding:7px 10px;border-radius:10px;border:1px solid #d6dfd648;margin-bottom:6px }
+.library-row:hover { background:#eff2f54a }
+.library-row>.icon-button { color:#78817d }
+.library-open { display:flex;align-items:center;gap:12px;flex:1;min-width:0;text-align:left }
+.library-open>.tab-favicon { width:28px;height:28px;background:#ffffff;border:1px solid #dde3df80;border-radius:8px }
+.library-copy { display:flex;flex-direction:column;gap:5px;flex:1;min-width:0 }
+.library-copy strong { font-size:12px;font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap }
+.library-copy small { font-size:10px;color:#8c9692;overflow:hidden;text-overflow:ellipsis;white-space:nowrap }
+.library-row>svg { width:18px;height:18px;color:#89948c;flex-shrink:0 }
+.extension-add { margin:18px 0 16px }
+.extension-mark { width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0 }
+.extension-mark>svg { width:20px;height:20px }
+.extension-mark .orbit-mark { width:26px;height:26px }
+.tab-menu-actions { display:flex;flex-direction:column;gap:7px }
+.tab-menu-actions .menu-row { color:#435146;height:42px;border:1px solid #dce4d87f }
+.tab-menu-actions .menu-row:hover { background:#e9efe4 }
+.tab-move-select { display:flex;align-items:center;gap:12px;margin-top:15px }
+.tab-move-select label { font-size:11px;min-width:65px }
+.tab-move-select select { height:36px;flex:1;min-width:0;border:1px solid #dbe1da;background:#fff;border-radius:8px;padding:0 10px;font:inherit;color:#435348 }
+.find-toolbar { position:absolute;z-index:15;top:10px;right:128px;width:350px;height:36px;border-radius:10px;display:flex;align-items:center;gap:4px;padding:0 6px 0 11px;background:#fafbfdf5;border:1px solid #d3d9db;box-shadow:0 5px 18px #25364414;color:#33483f }
+.find-toolbar>svg { width:15px;height:15px;opacity:.5;flex-shrink:0 }
+.find-toolbar input { flex:1;width:70px;min-width:0;border:0;background:transparent;outline:0;font-size:11px;color:#33483f }
+.find-toolbar .icon-button { width:25px;height:25px }
+.find-toolbar .icon-button svg { width:14px;height:14px }
+.find-count { font-size:10px;white-space:nowrap;opacity:.55;padding:0 5px }
+.help-shortcut { display:flex;justify-content:space-between;align-items:center;gap:20px;padding:14px 0;border-bottom:1px solid #e0e6dc;font-size:12px }
+.help-shortcut kbd { opacity:.6;font-size:10px;text-align:right }
+.card-dialog { width:790px }
+.card-layout { display:grid;grid-template-columns:minmax(250px,310px) minmax(200px,1fr);gap:36px;align-items:center }
+.card-poster { filter:drop-shadow(0 10px 18px #4b40631f) }
+.orbit-profile-card { width:100%;height:auto;display:block;border-radius:11px }
+.card-controls .field-label:first-child { margin-top:0 }
+.card-actions { display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 20px }
+.card-actions .primary-button { width:100% }
+.card-actions .secondary-button { flex:1 }
+.download-ring { position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center }
+.download-ring>svg { position:absolute;inset:0;width:42px;height:42px;transform:rotate(-90deg);stroke-width:3;fill:none }
+.download-ring .ring-track { stroke:#e3e1ef }
+.download-ring .ring-value { stroke:#8982cf;stroke-linecap:round;transition:stroke-dashoffset .28s linear }
+.download-ring-value { display:flex;align-items:center;justify-content:center;font-size:11px;font-variant-numeric:tabular-nums;color:#756ca7;font-weight:600 }
+.download-ring-value svg { display:block;width:17px;height:17px;fill:none }
+.download-ring.indeterminate>svg { animation:spin 1.4s linear infinite }
+.incognito-mode .brand-name::after { content:'시크릿';font-size:9px;letter-spacing:0;padding:4px 5px;background:#8579aa2c;border-radius:5px;margin-left:8px;vertical-align:middle }
+.collapsed.incognito-mode .brand-name::after { display:none }
+@media(max-width:1000px) { .card-dialog { width:680px }.card-layout { gap:22px;grid-template-columns:minmax(220px,270px) 1fr }.menu-row { height:36px } }
+@media(prefers-reduced-motion:reduce) { .favorite-tile:hover { transform:none }.download-ring.indeterminate>svg { animation:none } }

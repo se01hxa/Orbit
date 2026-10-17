@@ -1,0 +1,84 @@
+/* Orbit's optical icon and brand layer. Keep control targets generous at every scale. */
+svg {
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  shape-rendering: geometricPrecision;
+}
+.orbit-mark,
+.favicon-orbit .orbit-mark,
+.version-line .orbit-mark {
+  display: inline-block;
+  position: relative;
+  flex: 0 0 auto;
+  width: 29px;
+  height: 29px;
+  border: 0;
+  border-radius: 0;
+  background: url("brand/orbit-mark.svg") center / contain no-repeat;
+  transform: none;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 1px #22245112);
+}
+.orbit-mark::before,
+.orbit-mark::after,
+.favicon-orbit .orbit-mark::before,
+.favicon-orbit .orbit-mark::after,
+.version-line .orbit-mark::before,
+.version-line .orbit-mark::after { content: none; display: none; }
+.brand { gap: 9px; }
+.brand-name { letter-spacing: -1.4px; font-weight: 650; }
+.brand .orbit-mark { width: 31px; height: 31px; }
+.favicon-orbit .orbit-mark { width: 20px; height: 20px; }
+.version-line .orbit-mark { width: 19px; height: 19px; }
+.tab-actions { padding: 2px; gap: 2px; border-radius: 9px; }
+.tab-action {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 7px;
+  color: color-mix(in srgb, var(--ink), transparent 24%);
+  transition: background 140ms ease, color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+.tab-action svg { width: 18px; height: 18px; }
+.tab-action:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink), transparent 90%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink), transparent 95%);
+}
+.tab-action[aria-label*="닫기"]:hover,
+.tab-action[aria-label*="삭제"]:hover { color: #b33d4e; background: #bb415814; box-shadow: inset 0 0 0 1px #bb41580a; }
+.tab-action[aria-label*="고정"]:hover { color: #575ab4; background: #6864d514; }
+.tab-action:active { transform: scale(.92); }
+.tab-action:focus-visible { outline-offset: 1px; }
+.tab-row.active .tab-actions { opacity: 1; }
+.tab-row.active .tab-title { padding-right: 59px; }
+.tab-row:has(.tab-actions:hover) .tab-title { padding-right: 59px; }
+.section-label svg { width: 14px; height: 14px; opacity: .66; }
+.icon-button { min-width: 30px; min-height: 30px; }
+.icon-button svg { width: 19px; height: 19px; }
+.window-controls button svg { width: 17px; height: 17px; }
+.window-controls .window-close svg { width: 18px; height: 18px; }
+.pinned-tab .tab-favicon { width: 24px; height: 24px; }
+.tab-favicon img { object-fit: contain; image-rendering: auto; border-radius: 3px; }
+.dark-chrome .tab-action { color: #e8e8f2b8; }
+.dark-chrome .tab-action:hover { color: #fff; background: #ffffff14; box-shadow: inset 0 0 0 1px #ffffff08; }
+.dark-chrome .tab-action[aria-label*="닫기"]:hover { color: #ffb1ba; background: #e363781c; }
+.dark-chrome .tab-action[aria-label*="고정"]:hover { color: #c4c1ff; background: #a09bfa1c; }
+@media (prefers-reduced-motion: reduce) {
+  .tab-action { transition: none; }
+  .tab-action:active { transform: none; }
+}
+/* Distinct space identities retain their own colour across browser themes. */
+.space-glyph.space-symbol{background:transparent!important;box-shadow:none;display:grid;place-items:center}
+.space-symbol img{display:block;width:100%;height:100%;object-fit:contain}
+.space-dot{width:34px;height:34px;padding:3px;border-radius:12px}
+.space-dot>span.space-symbol{width:26px;height:26px;background:transparent;border-radius:9px}
+.space-dot.active{background:#ffffff55;border-color:#ffffffa0;box-shadow:0 2px 8px #27395819}
+.space-dot[data-kind="personal"]{--dot-color:#d66b83}
+.password-list{display:grid;gap:8px;margin:16px 0;max-height:360px;overflow:auto}
+.password-row>.library-copy{min-width:0;flex:1}.password-row>.library-copy small{overflow-wrap:anywhere}
+.password-row .secondary-button{padding:7px 14px}.password-row>svg{width:20px;height:20px;flex-shrink:0;color:#6877a5}
+.password-manager>.primary-button{margin:4px 0 14px}.password-manager>.text-input{margin-bottom:4px}.password-manager .settings-footnote{line-height:1.65}
+.space-brand-preview{display:flex;align-items:center;gap:16px;padding:18px;margin:12px 0 20px;border:1px solid #ffffff95;border-radius:18px;background:#ffffff45}.space-brand-preview .space-glyph{width:56px;height:56px}.space-brand-preview strong{font-size:17px;color:var(--text,#30374b)}

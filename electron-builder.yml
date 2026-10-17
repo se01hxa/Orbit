@@ -1,0 +1,58 @@
+appId: com.orbitbrowser.desktop
+productName: Orbit
+executableName: Orbit
+asar: true
+compression: normal
+forceCodeSigning: false
+npmRebuild: false
+publish: []
+
+directories:
+  output: ../Orbit-release
+  buildResources: build
+
+files:
+  - main.cjs
+  - preload.cjs
+  - login-preload.cjs
+  - lib/**
+  - renderer/**
+  - package.json
+  - README.md
+  - DISTRIBUTION.md
+
+electronFuses:
+  runAsNode: false
+  enableCookieEncryption: true
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: renderer/orbit.ico
+  requestedExecutionLevel: asInvoker
+  artifactName: Orbit-Setup-${version}-x64.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: false
+  packElevateHelper: false
+  allowToChangeInstallationDirectory: true
+  createStartMenuShortcut: true
+  createDesktopShortcut: true
+  shortcutName: Orbit
+  runAfterFinish: true
+  deleteAppDataOnUninstall: false
+  differentialPackage: false
+  installerIcon: renderer/orbit.ico
+  uninstallerIcon: renderer/orbit.ico
+  include: build/installer.nsh
+  installerLanguages:
+    - en_US
+    - ko_KR
