@@ -4,11 +4,15 @@ Chromium을 내장한 Electron 기반 Windows 브라우저입니다. 세로 탭,
 
 ## 설치와 실행
 
+**[Windows 설치 파일 다운로드](https://github.com/se01hxa/Orbit/releases/download/v0.3.0-beta.7/Orbit-Setup-0.3.0-beta.7-x64.exe)** · [릴리스와 SHA-256 확인](https://github.com/se01hxa/Orbit/releases/tag/v0.3.0-beta.7)
+
+GitHub에 로그인한 뒤 다운로드하세요. 비공개 저장소이므로 저장소 접근 권한이 필요합니다.
+
 일반 사용자는 `Orbit-Setup-0.3.0-beta.7-x64.exe`를 실행해 설치합니다. Node.js나 관리자 권한은 필요하지 않습니다. 설치 위치를 선택한 뒤 시작 메뉴에서 Orbit을 실행하세요. 기존 Orbit을 닫고 새 설치 파일을 실행하면 기본 프로필의 탭·스페이스·로그인 데이터·색상 설정을 이어서 사용합니다.
 
 설치 화면의 **바탕화면 아이콘 만들기**는 기본으로 선택되어 있으며 필요 없으면 해제할 수 있습니다. 기존에 바탕화면 바로가기가 없었던 경우에도 수동 업그레이드 중 이 항목을 선택하면 새로 만듭니다. 시작 메뉴 바로가기는 바탕화면 선택 여부와 관계없이 계속 생성합니다.
 
-이번 파일은 코드 서명이 없는 Windows x64 베타라 게시자 또는 SmartScreen 경고가 나타날 수 있습니다. 업데이트는 새 설치 파일을 직접 실행하는 방식입니다. 공개 다운로드 주소와 자동 업데이트 서버는 연결되어 있지 않습니다. 배포·서명·CI 설정은 [DISTRIBUTION.md](DISTRIBUTION.md)를 참고하세요.
+이번 파일은 코드 서명이 없는 Windows x64 베타라 게시자 또는 SmartScreen 경고가 나타날 수 있습니다. 업데이트는 새 설치 파일을 직접 실행하는 방식입니다. 설치 파일은 위 GitHub Releases 링크에서 배포하며, 자동 업데이트 서버는 연결되어 있지 않습니다. 배포·서명·CI 설정은 [DISTRIBUTION.md](DISTRIBUTION.md)를 참고하세요.
 
 소스에서 실행하려면 Node.js 22 이상이 필요합니다. `Start-Orbit.cmd`를 실행하거나 다음 명령을 사용합니다.
 
