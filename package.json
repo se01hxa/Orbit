@@ -1,7 +1,7 @@
 {
   "name": "orbit-browser",
   "productName": "Orbit",
-  "version": "0.3.0-beta.8",
+  "version": "0.3.0-beta.9",
   "description": "A Chromium-powered browser with spaces, vertical tabs and automatic picture in picture.",
   "main": "main.cjs",
   "private": true,
@@ -23,7 +23,8 @@
     "test:oauth": "node tests/oauth-spaces.cjs",
     "test:history": "node tests/history.cjs",
     "test:internal": "node tests/internal-pages.cjs",
-    "test:click": "node tests/youtube-click.cjs"
+    "test:click": "node tests/youtube-click.cjs",
+    "test:site-buttons": "node tests/site-buttons.cjs"
   },
   "devDependencies": {
     "@electron/packager": "20.3.0",

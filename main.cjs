@@ -33,7 +33,9 @@ const passwordVault = new PasswordVault(path.join(app.getPath('userData'), 'orbi
 let rpcBridge;
 let appQuitting = false;
 const externalURLs = process.argv.filter(isWebURL).slice(0, 20);
-const securePreferences = { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, allowRunningInsecureContent: false };
+const securePreferences = { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, allowRunningInsecureContent: false, disableBlinkFeatures: 'FedCm' };
+// Electron has no working FedCM account chooser here. Let identity providers use
+// their standard OAuth popup flow; keep TLS, origin checks and sandboxing intact.
 
 function isRpcExtension(manifest) {
   return manifest?.orbit_rpc_bridge?.version === 1 && manifest.orbit_rpc_bridge.endpoint === 'http://127.0.0.1:39231';
@@ -121,7 +123,7 @@ const faviconRequests = new Map();
 const faviconAborts = new Set();
 const extensionWindows = new Set();
 let actionQueue = Promise.resolve();
-const controller = { get win() { return win; }, get incognito() { return incognito; }, get primary() { return primary; }, get state() { return state; }, snapshot, handleAction, publish, receiveDownload, saveNow, closeExtensionPopups, rpcCandidates, loginEvent, suggest };
+const controller = { get win() { return win; }, get incognito() { return incognito; }, get primary() { return primary; }, get state() { return state; }, snapshot, handleAction, publish, receiveDownload, saveNow, closeExtensionPopups, rpcCandidates, loginEvent, suggest, canWriteClipboard };
 controllers.add(controller);
 let suggestionRequest;
 async function suggest(query){
@@ -295,6 +297,9 @@ async function restorePipIfVisible() {
   if (view && !view.webContents.isDestroyed() && !view.webContents.isLoadingMainFrame()) await withDeadline(view.webContents.executeJavaScript('document.pictureInPictureElement ? document.exitPictureInPicture().then(() => true) : false')).catch(() => {});
 }
 
+// Chromium retains document-focus and frame policy enforcement.
+function canWriteClipboard(wc){return !!(win&&!win.isDestroyed()&&!overlayOpen&&visibleIds().some(id=>views.get(id)?.webContents===wc));}
+function secureClipboardOrigin(origin){if(!origin)return false;const u=new URL(origin);return u.protocol==='https:'||(u.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(u.hostname));}
 function webOrigin(value) { return isWebURL(value) ? new URL(value).origin : null; }
 
 function configureSession(spaceId) {
@@ -302,22 +307,27 @@ function configureSession(spaceId) {
   if (sessions.has(partition)) return sessions.get(partition);
   const ses = session.fromPartition(partition);
   sessions.set(partition, ses);
-  ses.setPermissionCheckHandler((_wc, permission, requestingOrigin) => {
+  ses.setPermissionCheckHandler((_wc, permission, requestingOrigin,details={}) => {
     const origin = webOrigin(requestingOrigin);
+    if(permission==='clipboard-sanitized-write')return !!(_wc&&!_wc.isDestroyed()&&contentsOwners.get(_wc.id)?.canWriteClipboard(_wc)&&secureClipboardOrigin(origin));
+    if(['storage-access','top-level-storage-access'].includes(permission)){const embedding=webOrigin(_wc?.getURL()||'');return origin!==null&&embedding!==null&&permissionDecisions.get(partition+'|'+origin+'|'+permission+'|'+embedding)===true;}
     return origin !== null && (permission === 'fullscreen' || permissionDecisions.get(`${partition}|${origin}|${permission}`) === true);
   });
   ses.setPermissionRequestHandler(async (wc, permission, callback, details) => {
     const requestURL = details.requestingUrl || wc.getURL();
+    if(permission==='clipboard-sanitized-write')return callback(!!(!wc.isDestroyed()&&contentsOwners.get(wc.id)?.canWriteClipboard(wc)&&secureClipboardOrigin(webOrigin(requestURL))));
     if (permission === 'fullscreen') return callback(isWebURL(requestURL));
-    if (!isWebURL(requestURL) || !['media', 'geolocation', 'notifications', 'clipboard-read'].includes(permission)) return callback(false);
+    if (!isWebURL(requestURL) || !['media', 'geolocation', 'notifications', 'clipboard-read','storage-access','top-level-storage-access'].includes(permission)) return callback(false);
     const origin = webOrigin(requestURL);
-    const key = `${partition}|${origin}|${permission}`;
+    const storage=['storage-access','top-level-storage-access'].includes(permission);
+    const embedding=storage?webOrigin(wc.getURL()):null;if(storage&&!embedding)return callback(false);
+    const key = `${partition}|${origin}|${permission}`+(storage?'|'+embedding:'');
     if (permissionDecisions.has(key)) return callback(permissionDecisions.get(key));
-    const labels = { media: '카메라 / 마이크', geolocation: '위치', notifications: '알림', 'clipboard-read': '클립보드 읽기' };
+    const labels = { media: '카메라 / 마이크', geolocation: '위치', notifications: '알림', 'clipboard-read': '클립보드 읽기','storage-access':'삽입된 로그인 서비스의 쿠키 접근','top-level-storage-access':'연결된 로그인 서비스의 쿠키 접근' };
     try {
       const { response } = await dialog.showMessageBox(contentsOwners.get(wc.id)?.win, { type: 'question', title: '사이트 권한',
-        message: `${origin}`, detail: `${labels[permission]} 권한을 허용할까요? 이 선택은 현재 실행 중에 유지됩니다.`, buttons: ['차단', '허용'], defaultId: 0, cancelId: 0 });
-      permissionDecisions.set(key, response === 1); callback(response === 1);
+        message: storage?`${embedding}에서 ${origin} 사용`:`${origin}`, detail: `${labels[permission]} 권한을 허용할까요? 이 선택은 현재 실행 중에 유지됩니다.`, buttons: ['차단', '허용'], defaultId: 0, cancelId: 0 });
+      const granted=response===1&&(!storage||(!wc.isDestroyed()&&webOrigin(wc.getURL())===embedding));permissionDecisions.set(key,granted);callback(granted);
     } catch { callback(false); }
   });
   ses.setDisplayMediaRequestHandler((_request, callback) => callback({}));
