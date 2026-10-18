@@ -4,7 +4,7 @@ const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { randomUUID, createHash } = require('node:crypto');
 const { normalizeInput, isWebURL, isYoutubeURL, createDefaultState, sanitizeState, publicTab, sanitizeFaviconURL, nextSpaceName } = require('./lib/model.cjs');
-const { popupTarget } = require('./lib/popup-policy.cjs');
+const { popupTarget, sameOriginBlob } = require('./lib/popup-policy.cjs');
 const {addHistory,safeVisit,preferences}=require('./lib/history.cjs');
 const {fetchSuggestions}=require('./lib/search-suggestions.cjs');
 
@@ -384,7 +384,7 @@ function bindShortcuts(wc) {
 function updateNavigation(tab, wc) {
   if (wc.isDestroyed()) return;
   const url = wc.getURL();
-  if (isWebURL(url)) { if (webOrigin(tab.url) !== webOrigin(url)) tab.faviconURL = null;tab.url = url; }
+  if (isWebURL(url)||sameOriginBlob(url,tab.blobCreatorOrigin||tab.url)) { if (webOrigin(tab.url) !== webOrigin(url)) tab.faviconURL = null;tab.url = url; }
   tab.canGoBack = wc.navigationHistory.canGoBack(); tab.canGoForward = wc.navigationHistory.canGoForward();
   publish();
 }
@@ -428,17 +428,20 @@ function ensureView(tab, shouldLoad = true, popupOptions = {}) {
   });
   const checkNavigation = (event, url) => {
     const target = typeof url === 'string' ? url : event.url;
-    if (!isWebURL(target)) { event.preventDefault(); notify('이 브라우저는 웹 주소(http/https)만 열 수 있어요.'); }
+    const creator=webOrigin(wc.getURL())||tab.blobCreatorOrigin||webOrigin(tab.url);
+    if(sameOriginBlob(target,creator))tab.blobCreatorOrigin=creator;
+    if (!isWebURL(target)&&!sameOriginBlob(target,creator)&&!(target==='about:blank'&&tab.url==='about:blank')) { event.preventDefault(); notify('이 브라우저는 웹 주소(http/https)만 열 수 있어요.'); }
   };
   wc.on('will-navigate', checkNavigation); wc.on('will-redirect', checkNavigation);
   wc.setWindowOpenHandler(({ url, disposition }) => {
-    const target = popupTarget(url);
+    const creator=webOrigin(wc.getURL())||tab.blobCreatorOrigin;
+    const target = popupTarget(url,creator);
     if (!target) return { action: 'deny' };
     if (state.tabs.length >= 200) { notify('탭이 200개에 도달했어요. 사용하지 않는 탭을 닫아 주세요.'); return { action: 'deny' }; }
     return { action: 'allow', outlivesOpener: true, overrideBrowserWindowOptions: { webPreferences: { ...securePreferences, session: configureSession(tab.spaceId), preload: incognito ? undefined : path.join(__dirname, 'login-preload.cjs') } },
       createWindow: options => {
         if (state.tabs.length >= 200) throw new Error('Tab limit reached');
-        const popup = { id: randomUUID(), spaceId: tab.spaceId, title: target === 'about:blank' ? '로그인 창 연결 중…' : new URL(target).hostname, url: target, pinned: false, openerId: tab.id };
+        const popup = { id: randomUUID(), spaceId: tab.spaceId, title: target === 'about:blank' ? '로그인 창 연결 중…' : new URL(target).hostname, url: target, pinned: false, openerId: tab.id, blobCreatorOrigin: creator };
         state.tabs.push(popup);
         if (disposition !== 'background-tab') { enterPip(tab); state.activeSpaceId = tab.spaceId; state.activeTabId = popup.id; state.splitTabIds = []; }
         const popupView = ensureView(popup, !options.webContents, options); publish(); layout();
@@ -869,6 +872,7 @@ async function performAction(name, payload = {}) {
     case 'pinTab': { const target = tabById(payload.id); if (target) target.pinned = !target.pinned; break; }
     case 'navigate': {
       const url = normalizeInput(payload.input);
+      if(/^!y\s+/i.test(String(payload.input||'')))remember('search',String(payload.input).trim(),String(payload.input).trim());
       if(url!==HOME){const parsed=new URL(url);if(parsed.hostname==='www.google.com'&&parsed.pathname==='/search'&&parsed.searchParams.get('q')===String(payload.input||'').trim())remember('search',String(payload.input).trim(),String(payload.input).trim());}
       if (isInternal(tab.url) || !wc) { tab.url = url; tab.title = url === HOME ? '새 탭' : new URL(url).hostname; tab.error = null; ensureView(tab); }
       else if (isInternal(url)) { if (!await requestCloseView(tab.id, true)) break; Object.assign(tab, { url, title: url===HOME?'새 탭':new URL(url).hostname, faviconURL:null, error: null, loading: false, canGoBack: false, canGoForward: false }); }

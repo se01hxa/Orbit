@@ -307,7 +307,7 @@ async function openPalette(tabId){
 
 function updatePalette(query){
   const trimmed=query.trim(),results=[];
-  if(trimmed)results.push({kind:'navigate',title:looksLikeUrl(trimmed)?`이 주소 열기: ${trimmed}`:`“${trimmed}” 검색`,subtitle:looksLikeUrl(trimmed)?'웹페이지로 이동':'Google에서 검색',value:trimmed});
+  if(trimmed)results.push({kind:'navigate',title:looksLikeUrl(trimmed)?`이 주소 열기: ${trimmed}`:`“${trimmed}” 검색`,subtitle:/^!y(?:\s|$)/i.test(trimmed)?'YouTube에서 검색':looksLikeUrl(trimmed)?'웹페이지로 이동':'Google에서 검색',value:trimmed});
   else results.push({kind:'navigate',title:'검색어 또는 웹 주소 입력',subtitle:'새로운 아이디어를 찾아보세요',value:''});
   const enabled=state.searchPreferences?.autocomplete!==false;
   const matches=(enabled?state.tabs:[]).filter(t=>!isHome(t)&&(!trimmed||`${t.title} ${t.url}`.toLowerCase().includes(trimmed.toLowerCase()))).slice(0,6);
